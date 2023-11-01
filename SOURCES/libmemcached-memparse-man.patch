@@ -1,0 +1,12 @@
+diff -up libmemcached-1.0.18/man/memparse.1.memparse-man libmemcached-1.0.18/man/memparse.1
+--- libmemcached-1.0.18/man/memparse.1.memparse-man	2018-07-27 16:20:15.260664733 +0200
++++ libmemcached-1.0.18/man/memparse.1	2018-07-27 16:20:54.262765065 +0200
+@@ -57,8 +57,6 @@ level margin: \\n[rst2man-indent\\n[rst2
+ .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+ .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+ ..
+-.sp
+-Copies files to a collection of memcached servers
+ .SH SYNOPSIS
+ .sp
+ memparse [options] "option string"
