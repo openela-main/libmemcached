@@ -1,0 +1,225 @@
+commit 567105e2f3007783cd155846118ad47068110565
+Author: Tomas Korbar <tkorbar@redhat.com>
+Date:   Mon Oct 11 12:26:45 2021 +0200
+
+    Fix typo in memaslap manpage and help
+
+diff --git a/clients/memaslap.c b/clients/memaslap.c
+index 0290794..d599cc4 100644
+--- a/clients/memaslap.c
++++ b/clients/memaslap.c
+@@ -32,7 +32,7 @@
+ #include "ms_setting.h"
+ #include "ms_thread.h"
+ 
+-#define PROGRAM_NAME    "memslap"
++#define PROGRAM_NAME    "memaslap"
+ #define PROGRAM_DESCRIPTION \
+                         "Generates workload against memcached servers."
+ 
+@@ -130,7 +130,7 @@ static __attribute__((noreturn)) void ms_help_command(const char *command_name,
+   printf("    %s\n\n", description);
+   printf(
+     "Usage:\n"
+-    "    memslap -hV | -s servers [-F config_file] [-t time | -x exe_num] [...]\n\n"
++    "    memaslap -hV | -s servers [-F config_file] [-t time | -x exe_num] [...]\n\n"
+     "Options:\n");
+ 
+   for (int x= 0; long_options[x].name; x++)
+@@ -146,13 +146,13 @@ static __attribute__((noreturn)) void ms_help_command(const char *command_name,
+ 
+   printf(
+     "\nExamples:\n"
+-    "    memslap -s 127.0.0.1:11211 -S 5s\n"
+-    "    memslap -s 127.0.0.1:11211 -t 2m -v 0.2 -e 0.05 -b\n"
+-    "    memslap -s 127.0.0.1:11211 -F config -t 2m -w 40k -S 20s -o 0.2\n"
+-    "    memslap -s 127.0.0.1:11211 -F config -t 2m -T 4 -c 128 -d 20 -P 40k\n"
+-    "    memslap -s 127.0.0.1:11211 -F config -t 2m -d 50 -a -n 40\n"
+-    "    memslap -s 127.0.0.1:11211,127.0.0.1:11212 -F config -t 2m\n"
+-    "    memslap -s 127.0.0.1:11211,127.0.0.1:11212 -F config -t 2m -p 2\n\n");
++    "    memaslap -s 127.0.0.1:11211 -S 5s\n"
++    "    memaslap -s 127.0.0.1:11211 -t 2m -v 0.2 -e 0.05 -b\n"
++    "    memaslap -s 127.0.0.1:11211 -F config -t 2m -w 40k -S 20s -o 0.2\n"
++    "    memaslap -s 127.0.0.1:11211 -F config -t 2m -T 4 -c 128 -d 20 -P 40k\n"
++    "    memaslap -s 127.0.0.1:11211 -F config -t 2m -d 50 -a -n 40\n"
++    "    memaslap -s 127.0.0.1:11211,127.0.0.1:11212 -F config -t 2m\n"
++    "    memaslap -s 127.0.0.1:11211,127.0.0.1:11212 -F config -t 2m -p 2\n\n");
+ 
+   exit(0);
+ } /* ms_help_command */
+@@ -286,7 +286,7 @@ static const char *ms_lookup_help(ms_options_t option)
+ 
+   case OPT_UDP:
+     return
+-      "UDP support, default memslap uses TCP, TCP port and UDP port of\n"
++      "UDP support, default memaslap uses TCP, TCP port and UDP port of\n"
+       "        server must be same.";
+ 
+   case OPT_EXPIRE:
+diff --git a/man/memaslap.1 b/man/memaslap.1
+index 1f41484..e884381 100644
+--- a/man/memaslap.1
++++ b/man/memaslap.1
+@@ -83,11 +83,11 @@ the threads don\(aqt communicate with each other, and there are several socket
+ connections in each thread. Each connection keeps key size distribution,
+ value size distribution, and command distribution by itself.
+ .sp
+-You can specify servers via the \fImemslap \-\-servers\fP option or via the
++You can specify servers via the \fImemaslap \-\-servers\fP option or via the
+ environment variable \fI\%MEMCACHED_SERVERS\fP\&.
+ .SH FEATURES
+ .sp
+-Memslap is developed to for the following purposes:
++Memaslap is developed to for the following purposes:
+ .sp
+ Manages network connections with libevent asynchronously.
+ .sp
+@@ -121,8 +121,8 @@ of memaslap is similar to memcached. Libevent can ensure
+ memaslap can handle network very efficiently.
+ .SS Effective implementation of multi\-threads and concurrency
+ .sp
+-Memslap has the similar implementation of multi\-threads to
+-memcached. Memslap creates one or more self\-governed threads;
++Memaslap has the similar implementation of multi\-threads to
++memcached. Memaslap creates one or more self\-governed threads;
+ each thread is bound with one CPU core if the system testss setting CPU
+ core affinity.
+ .sp
+@@ -131,7 +131,7 @@ each thread has one or more self\-governed concurrencies; and each
+ concurrency has one or more socket connections. All the concurrencies don’t
+ communicate with each other even though they are in the same thread.
+ .sp
+-Memslap can create thousands of socket connections, and each
++Memaslap can create thousands of socket connections, and each
+ concurrency has tens of socket connections. Each concurrency randomly or
+ sequentially selects one socket connection from its socket connection pool
+ to run, so memaslap can ensure each concurrency handles one
+@@ -144,7 +144,7 @@ In order to improve time efficiency and space efficiency,
+ memaslap creates a random characters table with 10M characters. All the
+ suffixes of keys and values are generated from this random characters table.
+ .sp
+-Memslap uses the offset in the character table and the length
++Memaslap uses the offset in the character table and the length
+ of the string to identify a string. It can save much memory.
+ Each key contains two parts, a prefix and a suffix. The prefix is an
+ uint64_t, 8 bytes. In order to verify the data set before,
+@@ -152,7 +152,7 @@ memaslap need to ensure each key is unique, so it uses the prefix to identify
+ a key. The prefix cannot include illegal characters, such as ‘r’, ‘n’,
+ ‘0’ and ‘ ‘. And memaslap has an algorithm to ensure that.
+ .sp
+-Memslap doesn’t generate all the objects (key\-value pairs) at
++Memaslap doesn’t generate all the objects (key\-value pairs) at
+ the beginning. It only generates enough objects to fill the task window
+ (default 10K objects) of each concurrency. Each object has the following
+ basic information, key prefix, key suffix offset in the character table, key
+@@ -164,16 +164,16 @@ time, each concurrency kicks objects out of its window and adds new object
+ into it.
+ .SS Simple but useful task scheduling
+ .sp
+-Memslap uses libevent to schedule all the concurrencies of
++Memaslap uses libevent to schedule all the concurrencies of
+ threads, and each concurrency schedules tasks based on the local task
+-window. Memslap assumes that if each concurrency keeps the same
++window. Memaslap assumes that if each concurrency keeps the same
+ key distribution, value distribution and commands distribution, from
+ outside, memaslap keeps all the distribution as a whole.
+ Each task window includes a lot of objects, each object stores its basic
+ information, such as key, value, expire time, and so on. At any time, all
+ the objects in the window keep the same and fixed key and value
+ distribution. If an object is overwritten, the value of the object will be
+-updated. Memslap verifies the data or expire\-time according to
++updated. Memaslap verifies the data or expire\-time according to
+ the object information stored in the task window.
+ .sp
+ Libevent selects which concurrency to handle based on a specific network
+@@ -201,16 +201,16 @@ test. Each concurrency has one socket connection to each memcached server.
+ For the implementation, memaslap can set some objects to one
+ memcached server, and get these objects from the other servers.
+ .sp
+-By default, Memslap does single get. If the user specifies
++By default, Memaslap does single get. If the user specifies
+ multi\-get option, memaslap will collect enough get commands and
+ pack and send the commands together.
+ .sp
+-Memslap testss both the ASCII protocol and binary protocol,
++Memaslap testss both the ASCII protocol and binary protocol,
+ but it runs on the ASCII protocol by default.
+-Memslap by default runs on the TCP protocol, but it also
++Memaslap by default runs on the TCP protocol, but it also
+ tests UDP. Because UDP is unreliable, dropped packages and out\-of\-order
+-packages may occur. Memslap creates a memory buffer to handle
+-these problems. Memslap tries to read all the response data of
++packages may occur. Memaslap creates a memory buffer to handle
++these problems. Memaslap tries to read all the response data of
+ one command from the server and reorders the response data. If some packages
+ get lost, the waiting timeout mechanism can ensure half\-baked packages will
+ be discarded and the next command will be sent.
+@@ -343,7 +343,7 @@ throughput using “\-\-tps” option.
+ Most of the time, the user does not need to specify the window size. The
+ default window size is 10k. For Schooner Memcached, the user can specify
+ different window sizes to get different cache miss rates based on the test
+-case. Memslap testss cache miss rate between 0% and 100%.
++case. Memaslap testss cache miss rate between 0% and 100%.
+ If you use this utility to test the performance of Schooner Memcached, you
+ can specify a proper window size to get the expected cache miss rate. The
+ formula for calculating window size is as follows:
+@@ -389,7 +389,7 @@ The formula for calculating window size for cache miss rate 5%:
+ cache_size / concurrency / (key_size + value_size) * 0.7
+ .SS Verification
+ .sp
+-Memslap testss both data verification and expire\-time
++Memaslap testss both data verification and expire\-time
+ verification. The user can use "\-\-verify=" or "\-v" to specify the proportion
+ of data verification. In theory, it testss 100% data verification. The
+ user can use "\-\-exp_verify=" or "\-e" to specify the proportion of
+@@ -403,9 +403,9 @@ objects are gotten, memaslap will verify the expire\-time and
+ value.
+ .SS multi\-servers and multi\-config
+ .sp
+-Memslap testss multi\-servers based on self\-governed thread.
++Memaslap testss multi\-servers based on self\-governed thread.
+ There is a limitation that the number of servers cannot be greater than the
+-number of threads. Memslap assigns one thread to handle one
++number of threads. Memaslap assigns one thread to handle one
+ server at least. The user can use the "\-\-servers=" or "\-s" option to specify
+ multi\-servers.
+ .sp
+@@ -445,17 +445,17 @@ For example:
+ .sp
+ \-\-stat_freq=20s
+ .sp
+-Memslap will dump the statistics of the commands (get and set) at the frequency of every 20
++Memaslap will dump the statistics of the commands (get and set) at the frequency of every 20
+ seconds.
+ .sp
+ For more information on the format of dumping statistic information, refer to “Format of Output” section.
+ .SS Multi\-get
+ .sp
+ The user can use "\-\-division=" or "\-d" to specify multi\-get keys count.
+-Memslap by default does single get with TCP. Memslap also testss data
++Memaslap by default does single get with TCP. Memaslap also testss data
+ verification and expire\-time verification for multi\-get.
+ .sp
+-Memslap testss multi\-get with both TCP and UDP. Because of
++Memaslap testss multi\-get with both TCP and UDP. Because of
+ the different implementation of the ASCII protocol and binary protocol,
+ there are some differences between the two. For the ASCII protocol,
+ memaslap sends one “multi\-get” to the server once. For the
+@@ -463,7 +463,7 @@ binary protocol, memaslap sends several single get commands
+ together as “multi\-get” to the server.
+ .SS UDP and TCP
+ .sp
+-Memslap testss both UDP and TCP. For TCP,
++Memaslap testss both UDP and TCP. For TCP,
+ memaslap does not reconnect the memcached server if socket connections are
+ lost. If all the socket connections are lost or memcached server crashes,
+ memaslap will exit. If the user specifies the “\-\-reconnect”
+@@ -493,7 +493,7 @@ For example: \-\-facebook \-\-division=50 \-\-conn_sock=200
+ The above command means that memaslap will do facebook test,
+ each concurrency has 200 socket TCP connections and one UDP socket.
+ .sp
+-Memslap sets objects with the TCP socket, and multi\-gets 50
++Memaslap sets objects with the TCP socket, and multi\-gets 50
+ objects once with the UDP socket.
+ .sp
+ If you specify "\-\-division=50", the key size must be less that 25 bytes
